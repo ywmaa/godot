@@ -41,6 +41,7 @@
 #include "editor/editor_import_blend_runner.h"
 #include "editor/editor_scene_exporter_gltf_plugin.h"
 #include "editor/editor_scene_importer_blend.h"
+#include "editor/editor_scene_importer_usd.h"
 #include "editor/editor_scene_importer_fbx.h"
 #include "editor/editor_scene_importer_gltf.h"
 
@@ -53,10 +54,12 @@ static void _editor_init() {
 	import_gltf.instantiate();
 	ResourceImporterScene::add_importer(import_gltf);
 
+	// Required for both Blend and USD importer
+	String blender3_path = EDITOR_GET("filesystem/import/blender/blender3_path");
+
 	// Blend to glTF importer.
 
 	bool blend_enabled = GLOBAL_GET("filesystem/import/blender/enabled");
-	String blender3_path = EDITOR_GET("filesystem/import/blender/blender3_path");
 	if (blend_enabled) {
 		Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
 		if (blender3_path.is_empty()) {
@@ -73,6 +76,27 @@ static void _editor_init() {
 			EditorFileSystem::get_singleton()->add_import_format_support_query(blend_import_query);
 		}
 	}
+
+	// USD to glTF importer.
+
+	bool usd_enabled = GLOBAL_GET("filesystem/import/usd/enabled");
+	if (usd_enabled) {
+		Ref<DirAccess> da = DirAccess::create(DirAccess::ACCESS_FILESYSTEM);
+		if (blender3_path.is_empty()) {
+			WARN_PRINT(TTR("USD file import is enabled in the project settings, but no Blender path is configured in the editor settings. USD files will not be imported."));
+		} else if (!da->dir_exists(blender3_path)) {
+			WARN_PRINT(TTR("USD file import is enabled, but the Blender path doesn't point to an accessible directory. USD files will not be imported."));
+		} else {
+			Ref<EditorSceneFormatImporterUSD> importer;
+			importer.instantiate();
+			ResourceImporterScene::add_importer(importer);
+
+			Ref<EditorFileSystemImportFormatSupportQueryUSD> usd_import_query;
+			usd_import_query.instantiate();
+			EditorFileSystem::get_singleton()->add_import_format_support_query(usd_import_query);
+		}
+	}
+	
 	memnew(EditorImportBlendRunner);
 	EditorNode::get_singleton()->add_child(EditorImportBlendRunner::get_singleton());
 
@@ -138,12 +162,15 @@ void initialize_gltf_module(ModuleInitializationLevel p_level) {
 
 		// Project settings defined here so doctool finds them.
 		GLOBAL_DEF_RST_BASIC("filesystem/import/blender/enabled", true);
+		GLOBAL_DEF_RST_BASIC("filesystem/import/usd/enabled", true);
 		GLOBAL_DEF_RST_BASIC("filesystem/import/fbx/enabled", true);
 		GDREGISTER_CLASS(EditorSceneFormatImporterBlend);
 		GDREGISTER_CLASS(EditorSceneFormatImporterFBX);
 		// Can't (a priori) run external app on these platforms.
 		GLOBAL_DEF_RST("filesystem/import/blender/enabled.android", false);
 		GLOBAL_DEF_RST("filesystem/import/blender/enabled.web", false);
+		GLOBAL_DEF_RST("filesystem/import/usd/enabled.android", false);
+		GLOBAL_DEF_RST("filesystem/import/usd/enabled.web", false);
 		GLOBAL_DEF_RST("filesystem/import/fbx/enabled.android", false);
 		GLOBAL_DEF_RST("filesystem/import/fbx/enabled.web", false);
 
