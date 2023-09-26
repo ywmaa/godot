@@ -272,10 +272,6 @@ void Path3DGizmo::commit_handle(int p_id, bool p_secondary, const Variant &p_res
 void Path3DGizmo::redraw() {
 	clear();
 
-	if (debug_material.is_null()){
-		debug_material = gizmo_plugin->get_material("path_material", this);
-		debug_material.instantiate();
-	}
 	Ref<StandardMaterial3D> path_thin_material = gizmo_plugin->get_material("path_thin_material", this);
 	Ref<StandardMaterial3D> path_tilt_material = gizmo_plugin->get_material("path_tilt_material", this);
 	Ref<StandardMaterial3D> path_tilt_muted_material = gizmo_plugin->get_material("path_tilt_muted_material", this);
@@ -287,9 +283,11 @@ void Path3DGizmo::redraw() {
 		return;
 	}
 
+	debug_material = gizmo_plugin->get_material("path_material", this);
+
 	Color path_color = path->get_debug_custom_color();
 	if (path_color != Color(0.0, 0.0, 0.0)) {
-		// Use the debug path color defined in the EditorSettings.
+		debug_material.instantiate();
 		debug_material->set_albedo(path_color);
 	}
 

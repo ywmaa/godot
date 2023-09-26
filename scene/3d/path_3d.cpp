@@ -100,7 +100,7 @@ void Path3D::_update_debug_mesh() {
 		RS::get_singleton()->instance_set_visible(debug_instance, false);
 		return;
 	}
-	if (!debug_show){
+	if (!debug_show) {
 		RS::get_singleton()->instance_set_visible(debug_instance, false);
 		return;
 	}
@@ -156,7 +156,7 @@ void Path3D::_update_debug_mesh() {
 	bone_array[Mesh::ARRAY_VERTEX] = bones;
 
 	_update_debug_path_material();
-	
+
 	debug_mesh->clear_surfaces();
 	debug_mesh->add_surface_from_arrays(Mesh::PRIMITIVE_LINE_STRIP, ribbon_array);
 	debug_mesh->add_surface_from_arrays(Mesh::PRIMITIVE_LINES, bone_array);
