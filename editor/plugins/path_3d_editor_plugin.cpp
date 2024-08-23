@@ -434,7 +434,6 @@ void Path3DGizmo::redraw() {
 						const Vector3 edge = sin(a) * side + cos(a) * up;
 						disk.append(pos + edge * disk_size);
 					}
-					add_vertices(disk, path_tilt_material, Mesh::PRIMITIVE_LINE_STRIP);
 					add_vertices(disk, debug_material, Mesh::PRIMITIVE_LINE_STRIP);
 				}
 			}

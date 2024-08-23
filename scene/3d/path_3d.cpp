@@ -160,11 +160,10 @@ void Path3D::_update_debug_mesh() {
 	debug_mesh->clear_surfaces();
 	debug_mesh->add_surface_from_arrays(Mesh::PRIMITIVE_LINE_STRIP, ribbon_array);
 	debug_mesh->add_surface_from_arrays(Mesh::PRIMITIVE_LINES, bone_array);
-	debug_mesh->surface_set_material(0, debug_material);
+	debug_mesh->surface_set_material(1, debug_material);
 
 	RS::get_singleton()->instance_set_base(debug_instance, debug_mesh->get_rid());
 	RS::get_singleton()->mesh_surface_set_material(debug_mesh->get_rid(), 0, st->get_debug_paths_material()->get_rid());
-	RS::get_singleton()->mesh_surface_set_material(debug_mesh->get_rid(), 1, st->get_debug_paths_material()->get_rid());
 	if (is_inside_tree()) {
 		RS::get_singleton()->instance_set_scenario(debug_instance, get_world_3d()->get_scenario());
 		RS::get_singleton()->instance_set_transform(debug_instance, get_global_transform());
