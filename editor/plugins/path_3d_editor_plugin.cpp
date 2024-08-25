@@ -289,6 +289,16 @@ void Path3DGizmo::redraw() {
 	if (path_color != Color(0.0, 0.0, 0.0)) {
 		debug_material.instantiate();
 		debug_material->set_albedo(path_color);
+		debug_material->set_shading_mode(StandardMaterial3D::SHADING_MODE_UNSHADED);
+		debug_material->set_transparency(StandardMaterial3D::TRANSPARENCY_ALPHA);
+		debug_material->set_flag(StandardMaterial3D::FLAG_SRGB_VERTEX_COLOR, true);
+		debug_material->set_flag(StandardMaterial3D::FLAG_ALBEDO_FROM_VERTEX_COLOR, true);
+		debug_material->set_flag(StandardMaterial3D::FLAG_DISABLE_FOG, true);
+	}
+
+	// 0. Don't draw since nothing will be visible anyway.
+	if (path_color.a == 0.0) {
+		return;
 	}
 
 	real_t interval = 0.1;
@@ -471,6 +481,7 @@ Path3DGizmo::Path3DGizmo(Path3D *p_path, float p_disk_size) {
 
 	// Connecting to a signal once, rather than plaguing the implementation with calls to `Node3DEditor::update_transform_gizmo`.
 	path->connect("curve_changed", callable_mp(this, &Path3DGizmo::_update_transform_gizmo));
+	path->connect("debug_color_changed", callable_mp(this, &Path3DGizmo::redraw));
 
 	Path3DEditorPlugin::singleton->curve_edit->connect(SceneStringName(pressed), callable_mp(this, &Path3DGizmo::redraw));
 	Path3DEditorPlugin::singleton->curve_edit_curve->connect(SceneStringName(pressed), callable_mp(this, &Path3DGizmo::redraw));

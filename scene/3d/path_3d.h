@@ -39,7 +39,6 @@ class Path3D : public Node3D {
 
 private:
 	Ref<Curve3D> curve;
-	bool debug_show = true;
 	RID debug_instance;
 	Color debug_custom_color;
 	Ref<ArrayMesh> debug_mesh;
