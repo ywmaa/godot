@@ -100,10 +100,6 @@ void Path3D::_update_debug_mesh() {
 		RS::get_singleton()->instance_set_visible(debug_instance, false);
 		return;
 	}
-	if (get_debug_material()->get_albedo().a == 0.0) {
-		RS::get_singleton()->instance_set_visible(debug_instance, false);
-		return;
-	}
 
 	real_t interval = 0.1;
 	const real_t length = curve->get_baked_length();

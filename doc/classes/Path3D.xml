@@ -17,14 +17,16 @@
 			The custom color to use to draw the shape in the editor.
 			If set to [code]Color(0.0, 0.0, 0.0)[/code] (by default), the color set in EditorSettings is used.
 		</member>
-		<member name="debug_show" type="bool" setter="set_debug_show" getter="get_debug_show" default="true">
-			If [code]true[/code], debug shape will be visible.
-		</member>
 	</members>
 	<signals>
 		<signal name="curve_changed">
 			<description>
 				Emitted when the [member curve] changes.
+			</description>
+		</signal>
+		<signal name="debug_color_changed">
+			<description>
+				Emitted when the [member debug_custom_color] changes.
 			</description>
 		</signal>
 	</signals>
